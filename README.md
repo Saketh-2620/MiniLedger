@@ -3,6 +3,7 @@
 A lightweight full-stack personal finance tracker. Add and categorise income and expenses, view a live dashboard summary, and receive automated email notifications for large transactions and periodic reports.
 
 **Live:** [mini-ledger-lake.vercel.app](https://mini-ledger-lake.vercel.app)
+** please note that backend takes 50 sec to laod for the first time after a long period of inactivity as its hosted on render free tier
 
 **How AI Accelerated to work**
 Listed down the requirements and desined the Schema to suit the requirements which made it easy to genreate he CRUD with AI on those schemas
