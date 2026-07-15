@@ -35,16 +35,15 @@ router.get('/', async (req, res, next) => {
     // Per-category breakdown
     const breakdownResult = await pool.query(
       `SELECT
-         COALESCE(c.name, 'Uncategorized')           AS category_name,
-         c.id                                         AS category_id,
-         c.default_type                               AS category_default_type,
+         COALESCE(c.name, 'Uncategorized') AS category_name,
+         c.id                               AS category_id,
          t.type,
-         COALESCE(SUM(t.amount), 0)                  AS total,
-         COUNT(t.id)                                  AS count
+         COALESCE(SUM(t.amount), 0)        AS total,
+         COUNT(t.id)                        AS count
        FROM transactions t
        LEFT JOIN categories c ON c.id = t.category_id
        WHERE t.user_id = $1 AND t.date BETWEEN $2 AND $3
-       GROUP BY c.id, c.name, c.default_type, t.type
+       GROUP BY c.id, c.name, t.type
        ORDER BY total DESC`,
       [req.user.id, date_from, date_to]
     );

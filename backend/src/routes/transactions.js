@@ -74,8 +74,7 @@ router.get('/', async (req, res, next) => {
          t.created_at,
          t.updated_at,
          c.id   AS category_id,
-         c.name AS category_name,
-         c.default_type AS category_default_type
+         c.name AS category_name
        FROM transactions t
        LEFT JOIN categories c ON c.id = t.category_id
        WHERE ${whereClause}
@@ -104,7 +103,7 @@ router.get('/:id', async (req, res, next) => {
     const { rows } = await pool.query(
       `SELECT
          t.id, t.type, t.amount, t.description, t.date, t.created_at, t.updated_at,
-         c.id AS category_id, c.name AS category_name, c.default_type AS category_default_type
+         c.id AS category_id, c.name AS category_name
        FROM transactions t
        LEFT JOIN categories c ON c.id = t.category_id
        WHERE t.id = $1 AND t.user_id = $2`,
