@@ -109,7 +109,7 @@ export default function TransactionFormDialog({
             slotProps={{ textField: { fullWidth: true, required: true } }}
           />
 
-          {/* Category — NOT filtered by type, user picks freely */}
+          {/* Category — not filtered by type, user picks freely */}
           <TextField
             select label="Category (optional)" value={form.category_id}
             onChange={handleChange('category_id')} fullWidth
@@ -118,7 +118,6 @@ export default function TransactionFormDialog({
             {categories.map((c) => (
               <MenuItem key={c.id} value={c.id}>
                 {c.name}
-                {c.default_type ? ` (${c.default_type})` : ''}
               </MenuItem>
             ))}
           </TextField>

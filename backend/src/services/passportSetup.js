@@ -1,6 +1,6 @@
-const passport      = require('passport');
+const passport       = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const pool          = require('../db/pool');
+const pool           = require('../db/pool');
 
 passport.use(
   new GoogleStrategy(
@@ -16,7 +16,6 @@ passport.use(
         const name      = profile.displayName;
         const avatarUrl = profile.photos?.[0]?.value || null;
 
-        // Find or create user
         const { rows } = await pool.query(
           `INSERT INTO users (google_id, email, name, avatar_url)
            VALUES ($1, $2, $3, $4)
@@ -39,7 +38,6 @@ passport.use(
   )
 );
 
-// Minimal session serialization — only used during OAuth handshake
 passport.serializeUser((user, done) => done(null, user.id));
 passport.deserializeUser(async (id, done) => {
   try {
@@ -50,28 +48,28 @@ passport.deserializeUser(async (id, done) => {
   }
 });
 
-// ── Default categories seeding ────────────────────────────────────────────────
+// ── Default categories (no type — type is set per transaction) ────────────────
 
 const DEFAULT_CATEGORIES = [
-  { name: 'Salary',        default_type: 'income'  },
-  { name: 'Freelance',     default_type: 'income'  },
-  { name: 'Rent',          default_type: 'expense' },
-  { name: 'Food',          default_type: 'expense' },
-  { name: 'Transport',     default_type: 'expense' },
-  { name: 'Entertainment', default_type: 'expense' },
-  { name: 'Healthcare',    default_type: 'expense' },
-  { name: 'Utilities',     default_type: 'expense' },
-  { name: 'Others',        default_type: 'other'   }, // can be income or expense
-  { name: 'Transfers',     default_type: 'other'   }, // can be income or expense
+  'Salary',
+  'Freelance',
+  'Rent',
+  'Food',
+  'Transport',
+  'Entertainment',
+  'Healthcare',
+  'Utilities',
+  'Others',
+  'Transfers',
 ];
 
 async function seedDefaultCategories(userId) {
-  for (const cat of DEFAULT_CATEGORIES) {
+  for (const name of DEFAULT_CATEGORIES) {
     await pool.query(
-      `INSERT INTO categories (user_id, name, default_type)
-       VALUES ($1, $2, $3)
+      `INSERT INTO categories (user_id, name)
+       VALUES ($1, $2)
        ON CONFLICT (user_id, name) DO NOTHING`,
-      [userId, cat.name, cat.default_type]
+      [userId, name]
     );
   }
 }
