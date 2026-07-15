@@ -166,7 +166,7 @@ export default function Layout() {
           component="main"
           sx={{
             flexGrow: 1,
-            minWidth: 0,          // prevents flex overflow on narrow screens
+            minWidth: 0,          
             bgcolor: 'background.default',
             minHeight: '100%',
             overflow: 'auto',

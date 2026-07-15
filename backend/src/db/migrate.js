@@ -7,11 +7,10 @@ async function runMigrations() {
   const migrationsDir = path.join(__dirname, '../../migrations');
   const files = fs.readdirSync(migrationsDir)
     .filter(f => f.endsWith('.sql'))
-    .sort(); // runs in filename order: 001_, 002_, ...
+    .sort(); 
 
   const client = await pool.connect();
   try {
-    // Track which migrations have already run
     await client.query(`
       CREATE TABLE IF NOT EXISTS _migrations (
         filename VARCHAR(255) PRIMARY KEY,

@@ -27,7 +27,6 @@ passport.use(
 
         const user = rows[0];
 
-        // Seed default categories for brand-new users
         await seedDefaultCategories(user.id);
 
         return done(null, user);
@@ -48,7 +47,6 @@ passport.deserializeUser(async (id, done) => {
   }
 });
 
-// ── Default categories (no type — type is set per transaction) ────────────────
 
 const DEFAULT_CATEGORIES = [
   'Salary',

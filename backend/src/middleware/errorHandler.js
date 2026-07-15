@@ -1,11 +1,8 @@
-/**
- * Central error handler — must be registered last in Express middleware chain.
- */
-// eslint-disable-next-line no-unused-vars
+
 function errorHandler(err, req, res, next) {
   console.error('[Error]', err);
 
-  // PostgreSQL unique violation
+ 
   if (err.code === '23505') {
     return res.status(409).json({ error: 'A record with that value already exists' });
   }
