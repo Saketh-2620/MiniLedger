@@ -1,51 +1,49 @@
-const nodemailer = require('nodemailer');
-
 /**
- * Reusable Nodemailer transporter.
- * Supports Gmail SMTP or SendGrid depending on env vars.
+ * Mailer service — uses SendGrid HTTP API (not SMTP).
  *
- * For Gmail:  set MAIL_SERVICE=gmail, MAIL_USER, MAIL_PASS (App Password)
- * For SendGrid: set MAIL_SERVICE=sendgrid, SENDGRID_API_KEY
+ * Why HTTP and not SMTP:
+ *   Render's free tier blocks all outbound SMTP ports (465, 587).
+ *   The SendGrid HTTP API sends over port 443 (HTTPS) which is never blocked.
+ *
+ * Setup:
+ *   1. Create a free account at https://sendgrid.com (100 emails/day free)
+ *   2. Settings → API Keys → Create API Key (Full Access) → copy the key
+ *   3. Settings → Sender Authentication → verify a single sender (your Gmail)
+ *   4. Set env vars:
+ *        SENDGRID_API_KEY=SG.xxxxxxxxxxxx
+ *        MAIL_FROM=your_verified_sender@gmail.com
  */
 
-let transporter;
+const sgMail = require('@sendgrid/mail');
 
-if (process.env.MAIL_SERVICE === 'sendgrid') {
-  transporter = nodemailer.createTransport({
-    host: 'smtp.sendgrid.net',
-    port: 587,
-    auth: {
-      user: 'apikey',
-      pass: process.env.SENDGRID_API_KEY,
-    },
-  });
-} else {
-  // Default: Gmail SMTP
-  transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: process.env.MAIL_USER,
-      pass: process.env.MAIL_PASS, // Use a Gmail App Password, not your account password
-    },
-  });
-}
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 /**
- * Send an email.
+ * Send an email via SendGrid HTTP API.
  * @param {Object} options
- * @param {string} options.to
- * @param {string} options.subject
- * @param {string} options.html
- * @returns {Promise<Object>} Nodemailer send info
+ * @param {string} options.to      - recipient email
+ * @param {string} options.subject - email subject
+ * @param {string} options.html    - HTML body
  */
 async function sendMail({ to, subject, html }) {
-  const mailOptions = {
-    from: `"Mini-Ledger" <${process.env.MAIL_USER}>`,
+  if (!process.env.SENDGRID_API_KEY) {
+    throw new Error('SENDGRID_API_KEY env var is not set');
+  }
+  if (!process.env.MAIL_FROM) {
+    throw new Error('MAIL_FROM env var is not set — must be a SendGrid verified sender email');
+  }
+
+  const msg = {
     to,
+    from: {
+      email: process.env.MAIL_FROM,
+      name:  'Mini-Ledger',
+    },
     subject,
     html,
   };
-  return transporter.sendMail(mailOptions);
+
+  await sgMail.send(msg);
 }
 
 module.exports = { sendMail };

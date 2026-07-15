@@ -35,7 +35,7 @@ async function markFailed(logId, errorMessage) {
 // ── Currency formatter ────────────────────────────────────────────────────────
 
 function fmt(amount) {
-  return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
+  return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 2 }).format(amount);
 }
 
 // ── 1. Large Transaction Alert ────────────────────────────────────────────────
