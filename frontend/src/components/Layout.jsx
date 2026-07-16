@@ -32,16 +32,22 @@ export default function Layout() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [anchorEl,   setAnchorEl]   = useState(null);
 
-  // ── Sidebar content (shared between permanent + temporary drawer) ─────────
+  // ── Sidebar content ───────────────────────────────────────────────────────
+  // Desktop: brand shown here only (AppBar has no title on desktop)
+  // Mobile:  no brand here (AppBar already shows it)
   const drawerContent = (
     <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-      <Box sx={{ p: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
-        <AccountBalanceWalletIcon color="primary" />
-        <Typography variant="h6" fontWeight={700} color="primary">
-          Mini-Ledger
-        </Typography>
-      </Box>
-      <Divider />
+      {!isMobile && (
+        <>
+          <Box sx={{ p: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+            <AccountBalanceWalletIcon color="primary" />
+            <Typography variant="h6" fontWeight={700} color="primary">
+              Mini-Ledger
+            </Typography>
+          </Box>
+          <Divider />
+        </>
+      )}
       <List sx={{ flexGrow: 1, pt: 1 }}>
         {NAV_ITEMS.map((item) => {
           const isActive = location.pathname === item.path;
@@ -71,7 +77,6 @@ export default function Layout() {
   );
 
   return (
-    // Root: flex column so AppBar sits above the sidebar+content row
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
 
       {/* ── Top AppBar ────────────────────────────────────────────────────── */}
@@ -81,15 +86,23 @@ export default function Layout() {
         sx={{ zIndex: (t) => t.zIndex.drawer + 1, bgcolor: 'white', color: 'text.primary' }}
       >
         <Toolbar>
+          {/* Hamburger — mobile only */}
           {isMobile && (
             <IconButton edge="start" onClick={() => setMobileOpen(true)} sx={{ mr: 1 }}>
               <MenuIcon />
             </IconButton>
           )}
-          <Typography variant="h6" sx={{ flexGrow: 1, color: 'primary.main', fontWeight: 700 }}>
-            Mini-Ledger
-          </Typography>
 
+          {/* Brand title in AppBar on mobile only — desktop has it in the sidebar */}
+          {isMobile ? (
+            <Typography variant="h6" sx={{ flexGrow: 1, color: 'primary.main', fontWeight: 700 }}>
+              Mini-Ledger
+            </Typography>
+          ) : (
+            <Box sx={{ flexGrow: 1 }} />
+          )}
+
+          {/* Avatar + user menu — always visible */}
           <IconButton onClick={(e) => setAnchorEl(e.currentTarget)} size="small">
             <Avatar
               src={user?.avatar_url}
@@ -122,13 +135,13 @@ export default function Layout() {
         </Toolbar>
       </AppBar>
 
-      {/* ── Spacer so content clears the fixed AppBar ────────────────────── */}
+      {/* Spacer so content clears the fixed AppBar */}
       <Toolbar />
 
-      {/* ── Body row: sidebar + main content side by side ────────────────── */}
+      {/* ── Body row: sidebar + main content ─────────────────────────────── */}
       <Box sx={{ display: 'flex', flexGrow: 1 }}>
 
-        {/* Permanent sidebar — desktop only, participates in flex so no ml needed */}
+        {/* Permanent sidebar — desktop only */}
         {!isMobile && (
           <Drawer
             variant="permanent"
@@ -138,7 +151,7 @@ export default function Layout() {
               '& .MuiDrawer-paper': {
                 width: DRAWER_WIDTH,
                 boxSizing: 'border-box',
-                position: 'relative', // <- key: stays in normal flow, not fixed
+                position: 'relative',
                 height: '100%',
               },
             }}
@@ -161,18 +174,17 @@ export default function Layout() {
           {drawerContent}
         </Drawer>
 
-        {/* Main content — takes remaining width naturally */}
+        {/* Main content */}
         <Box
           component="main"
           sx={{
             flexGrow: 1,
-            minWidth: 0,          
+            minWidth: 0,
             bgcolor: 'background.default',
             minHeight: '100%',
             overflow: 'auto',
           }}
         >
-          {/* Inner wrapper: caps width and centers page content */}
           <Box
             sx={{
               maxWidth: 1100,
