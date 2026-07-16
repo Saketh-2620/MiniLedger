@@ -10,7 +10,6 @@ import DashboardIcon            from '@mui/icons-material/Dashboard';
 import ReceiptLongIcon          from '@mui/icons-material/ReceiptLong';
 import CategoryIcon             from '@mui/icons-material/Category';
 import NotificationsIcon        from '@mui/icons-material/Notifications';
-import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import LogoutIcon               from '@mui/icons-material/Logout';
 import { useAuth } from '../context/AuthContext';
 
@@ -37,17 +36,6 @@ export default function Layout() {
   // Mobile:  no brand here (AppBar already shows it)
   const drawerContent = (
     <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-      {!isMobile && (
-        <>
-          <Box sx={{ p: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
-            <AccountBalanceWalletIcon color="primary" />
-            <Typography variant="h6" fontWeight={700} color="primary">
-              Mini-Ledger
-            </Typography>
-          </Box>
-          <Divider />
-        </>
-      )}
       <List sx={{ flexGrow: 1, pt: 1 }}>
         {NAV_ITEMS.map((item) => {
           const isActive = location.pathname === item.path;
@@ -93,14 +81,10 @@ export default function Layout() {
             </IconButton>
           )}
 
-          {/* Brand title in AppBar on mobile only — desktop has it in the sidebar */}
-          {isMobile ? (
-            <Typography variant="h6" sx={{ flexGrow: 1, color: 'primary.main', fontWeight: 700 }}>
-              Mini-Ledger
-            </Typography>
-          ) : (
-            <Box sx={{ flexGrow: 1 }} />
-          )}
+          {/* Brand title — always visible in AppBar */}
+          <Typography variant="h6" sx={{ flexGrow: 1, color: 'primary.main', fontWeight: 700 }}>
+            Mini-Ledger
+          </Typography>
 
           {/* Avatar + user menu — always visible */}
           <IconButton onClick={(e) => setAnchorEl(e.currentTarget)} size="small">
