@@ -36,7 +36,6 @@ export default function DashboardPage() {
 
   return (
     <Box>
-      {/* Page header */}
       <Box sx={{ mb: 3 }}>
         <Typography variant="h5" fontWeight={700}>Dashboard</Typography>
         <Typography variant="body2" color="text.secondary">
@@ -44,7 +43,6 @@ export default function DashboardPage() {
         </Typography>
       </Box>
 
-      {/* Summary stat cards */}
       <SummaryCards
         totalIncome={summary.total_income}
         totalExpenses={summary.total_expenses}
@@ -52,10 +50,8 @@ export default function DashboardPage() {
         transactionCount={summary.transaction_count}
       />
 
-      {/* Lower two-column section */}
       <Grid container spacing={3} sx={{ mt: 0.5 }}>
 
-        {/* Category breakdown */}
         <Grid item xs={12} md={6}>
           <Card sx={{ height: '100%' }}>
             <CardContent>
@@ -81,7 +77,6 @@ export default function DashboardPage() {
                       borderColor: 'divider',
                     }}
                   >
-                    {/* Category name + type label as plain text (no chip) */}
                     <Box>
                       <Typography variant="body2" fontWeight={500}>
                         {item.category_name}
@@ -95,7 +90,6 @@ export default function DashboardPage() {
                       </Typography>
                     </Box>
 
-                    {/* Amount in INR */}
                     <Typography
                       variant="body2"
                       fontWeight={700}
@@ -111,7 +105,6 @@ export default function DashboardPage() {
           </Card>
         </Grid>
 
-        {/* Recent transactions */}
         <Grid item xs={12} md={6}>
           <RecentTransactions transactions={summary.recent_transactions} />
         </Grid>

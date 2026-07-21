@@ -18,14 +18,12 @@ const COOKIE_OPTIONS = {
   maxAge:   7 * 24 * 60 * 60 * 1000,
 };
 
-//Google OAuth
 
-// Step 1: Redirect user to Google consent screen
 router.get('/google',
   passport.authenticate('google', { scope: ['profile', 'email'] })
 );
 
-// Step 2: Google redirects back here after user grants consent
+
 router.get('/google/callback',
   passport.authenticate('google', { session: false, failureRedirect: `${process.env.CLIENT_URL}/login?error=oauth_failed` }),
   async (req, res) => {
@@ -34,11 +32,9 @@ router.get('/google/callback',
       const accessToken  = generateAccessToken(user);
       const refreshToken = await generateRefreshToken(user.id);
 
-      // Refresh token goes in httpOnly cookie
       res.cookie('refreshToken', refreshToken, COOKIE_OPTIONS);
 
-      // Redirect to frontend with access token in query param
-      // Frontend reads it once, stores in memory, then discards from URL
+   
       res.redirect(`${process.env.CLIENT_URL}/auth/callback?token=${accessToken}`);
     } catch (err) {
       console.error('OAuth callback error:', err);
@@ -47,10 +43,7 @@ router.get('/google/callback',
   }
 );
 
-// ── Token Refresh ─────────────────────────────────────────────────────────────
 
-// POST /api/auth/refresh
-// Reads httpOnly cookie, issues a new access token
 router.post('/refresh', async (req, res, next) => {
   try {
     const rawToken = req.cookies?.refreshToken;
@@ -63,7 +56,7 @@ router.post('/refresh', async (req, res, next) => {
       return res.status(401).json({ error: 'Refresh token invalid or expired' });
     }
 
-    // Rotate: revoke old, issue new
+    // Rotating refresh token
     await revokeRefreshToken(rawToken);
     const newRefreshToken = await generateRefreshToken(tokenRow.user_id);
     const accessToken     = generateAccessToken({
@@ -79,9 +72,7 @@ router.post('/refresh', async (req, res, next) => {
   }
 });
 
-// ── Logout ────────────────────────────────────────────────────────────────────
 
-// POST /api/auth/logout  (single device)
 router.post('/logout', async (req, res, next) => {
   try {
     const rawToken = req.cookies?.refreshToken;
@@ -93,7 +84,7 @@ router.post('/logout', async (req, res, next) => {
   }
 });
 
-// POST /api/auth/logout-all  (all devices)
+
 router.post('/logout-all', authenticate, async (req, res, next) => {
   try {
     await revokeAllRefreshTokens(req.user.id);
@@ -104,9 +95,7 @@ router.post('/logout-all', authenticate, async (req, res, next) => {
   }
 });
 
-// ── Current User ──────────────────────────────────────────────────────────────
 
-// GET /api/auth/me  — returns current user from JWT
 router.get('/me', authenticate, (req, res) => {
   res.json({ user: req.user });
 });

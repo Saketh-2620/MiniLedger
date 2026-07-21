@@ -5,14 +5,12 @@ const { notifyLargeTransaction } = require('../services/notificationService');
 
 const router = express.Router();
 
-// All transaction routes require authentication
+
 router.use(authenticate);
 
 const LARGE_TRANSACTION_THRESHOLD = parseFloat(process.env.LARGE_TXN_THRESHOLD || '1000');
 
-// ── GET /api/transactions ─────────────────────────────────────────────────────
-// List transactions with optional filters + pagination
-// Query params: type, category_id, date_from, date_to, page, limit
+
 router.get('/', async (req, res, next) => {
   try {
     const {
@@ -97,7 +95,7 @@ router.get('/', async (req, res, next) => {
   }
 });
 
-// ── GET /api/transactions/:id ─────────────────────────────────────────────────
+
 router.get('/:id', async (req, res, next) => {
   try {
     const { rows } = await pool.query(
@@ -120,7 +118,7 @@ router.get('/:id', async (req, res, next) => {
   }
 });
 
-// ── POST /api/transactions ────────────────────────────────────────────────────
+
 router.post('/', async (req, res, next) => {
   try {
     const { type, amount, description, date, category_id } = req.body;
@@ -169,7 +167,7 @@ router.post('/', async (req, res, next) => {
   }
 });
 
-// ── PUT /api/transactions/:id ─────────────────────────────────────────────────
+
 router.put('/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -229,7 +227,7 @@ router.put('/:id', async (req, res, next) => {
   }
 });
 
-// ── DELETE /api/transactions/:id ──────────────────────────────────────────────
+
 router.delete('/:id', async (req, res, next) => {
   try {
     const { rowCount } = await pool.query(

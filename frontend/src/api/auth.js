@@ -9,7 +9,7 @@ export const logout = () =>
 export const logoutAll = () =>
   axiosClient.post('/auth/logout-all');
 
-// Redirect browser to Google OAuth — must point directly to backend, not Vercel
+
 export const loginWithGoogle = () => {
   const backendUrl = import.meta.env.VITE_API_BASE_URL || '/api';
   window.location.href = `${backendUrl}/auth/google`;

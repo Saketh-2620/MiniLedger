@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.use(authenticate);
 
-// ── GET /api/categories ───────────────────────────────────────────────────────
+
 router.get('/', async (req, res, next) => {
   try {
     const { rows } = await pool.query(
@@ -22,7 +22,7 @@ router.get('/', async (req, res, next) => {
   }
 });
 
-// ── POST /api/categories ──────────────────────────────────────────────────────
+
 router.post('/', async (req, res, next) => {
   try {
     const { name } = req.body;
@@ -44,7 +44,7 @@ router.post('/', async (req, res, next) => {
   }
 });
 
-// ── PUT /api/categories/:id ───────────────────────────────────────────────────
+
 router.put('/:id', async (req, res, next) => {
   try {
     const { id }   = req.params;
@@ -76,7 +76,7 @@ router.put('/:id', async (req, res, next) => {
   }
 });
 
-// ── DELETE /api/categories/:id ────────────────────────────────────────────────
+
 router.delete('/:id', async (req, res, next) => {
   try {
     const { id } = req.params;

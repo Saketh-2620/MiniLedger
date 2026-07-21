@@ -6,9 +6,7 @@ const ACCESS_TOKEN_EXPIRY  = '15m';
 const REFRESH_TOKEN_EXPIRY = '7d';
 const REFRESH_TOKEN_MS     = 7 * 24 * 60 * 60 * 1000;
 
-/**
- * Issue a short-lived JWT access token.
- */
+
 function generateAccessToken(user) {
   return jwt.sign(
     { sub: user.id, email: user.email, name: user.name },
@@ -17,9 +15,7 @@ function generateAccessToken(user) {
   );
 }
 
-/**
- * Create a refresh token, hash it, persist in DB, return raw token.
- */
+
 async function generateRefreshToken(userId) {
   const rawToken  = crypto.randomBytes(64).toString('hex');
   const tokenHash = crypto.createHash('sha256').update(rawToken).digest('hex');
@@ -34,9 +30,7 @@ async function generateRefreshToken(userId) {
   return rawToken;
 }
 
-/**
- * Validate a raw refresh token. Returns the user row or null.
- */
+
 async function validateRefreshToken(rawToken) {
   const tokenHash = crypto.createHash('sha256').update(rawToken).digest('hex');
 
@@ -51,17 +45,12 @@ async function validateRefreshToken(rawToken) {
   return rows[0] || null;
 }
 
-/**
- * Revoke a single refresh token.
- */
+
 async function revokeRefreshToken(rawToken) {
   const tokenHash = crypto.createHash('sha256').update(rawToken).digest('hex');
   await pool.query('DELETE FROM refresh_tokens WHERE token_hash = $1', [tokenHash]);
 }
 
-/**
- * Revoke all refresh tokens for a user (full logout).
- */
 async function revokeAllRefreshTokens(userId) {
   await pool.query('DELETE FROM refresh_tokens WHERE user_id = $1', [userId]);
 }

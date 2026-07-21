@@ -85,7 +85,7 @@ export default function TransactionFormDialog({
         <Stack spacing={2} sx={{ mt: 1 }}>
           {error && <Alert severity="error">{error}</Alert>}
 
-          {/* Type */}
+          
           <TextField
             select label="Type" value={form.type}
             onChange={handleChange('type')} fullWidth required
@@ -94,14 +94,14 @@ export default function TransactionFormDialog({
             <MenuItem value="expense">Expense</MenuItem>
           </TextField>
 
-          {/* Amount */}
+          
           <TextField
             label="Amount" type="number" value={form.amount}
             onChange={handleChange('amount')} fullWidth required
             inputProps={{ min: 0.01, step: 0.01 }}
           />
 
-          {/* Date */}
+          
           <DatePicker
             label="Date"
             value={form.date}
@@ -109,7 +109,7 @@ export default function TransactionFormDialog({
             slotProps={{ textField: { fullWidth: true, required: true } }}
           />
 
-          {/* Category — not filtered by type, user picks freely */}
+          
           <TextField
             select label="Category (optional)" value={form.category_id}
             onChange={handleChange('category_id')} fullWidth
@@ -122,7 +122,7 @@ export default function TransactionFormDialog({
             ))}
           </TextField>
 
-          {/* Description */}
+          
           <TextField
             label="Description (optional)" value={form.description}
             onChange={handleChange('description')} fullWidth multiline rows={2}

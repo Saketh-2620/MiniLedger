@@ -42,7 +42,7 @@ export default function RecentTransactions({ transactions = [] }) {
                     }
                     secondary={
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 0.5 }}>
-                        <Typography variant="caption" color="text.secondary">{txn.date}</Typography>
+                        <Typography variant="caption" color="text.secondary">{txn.date.slice(0, 10)}</Typography>
                         {txn.category_name && (
                           <Chip label={txn.category_name} size="small" variant="outlined" sx={{ height: 18, fontSize: '0.65rem' }} />
                         )}

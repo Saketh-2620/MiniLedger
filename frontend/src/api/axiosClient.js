@@ -2,10 +2,10 @@ import axios from 'axios';
 
 const axiosClient = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || '/api',
-  withCredentials: true, // sends httpOnly refresh token cookie
+  withCredentials: true, 
 });
 
-// ── Request interceptor: attach access token ──────────────────────────────────
+
 axiosClient.interceptors.request.use((config) => {
   const token = window.__accessToken;
   if (token) {
@@ -14,7 +14,7 @@ axiosClient.interceptors.request.use((config) => {
   return config;
 });
 
-// ── Response interceptor: auto-refresh on 401 ────────────────────────────────
+
 let isRefreshing = false;
 let failedQueue  = [];
 

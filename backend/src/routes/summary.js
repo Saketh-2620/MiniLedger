@@ -6,12 +6,10 @@ const router = express.Router();
 
 router.use(authenticate);
 
-// ── GET /api/summary ──────────────────────────────────────────────────────────
-// Returns totals, net balance, and per-category breakdown.
-// Query params: date_from, date_to  (default: current month)
+
 router.get('/', async (req, res, next) => {
   try {
-    // Default to current month if no range provided
+    
     const now       = new Date();
     const firstDay  = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().slice(0, 10);
     const lastDay   = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().slice(0, 10);

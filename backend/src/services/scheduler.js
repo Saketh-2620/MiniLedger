@@ -4,10 +4,7 @@ const {
   runMonthlyReportForAll,
 } = require('./notificationService');
 
-/**
- * Weekly summary — every Monday at 8:00 AM server time
- * Cron: "0 8 * * 1"
- */
+// Weekly summary — every Monday at 8:00 AM server time
 cron.schedule('0 8 * * 1', async () => {
   try {
     await runWeeklySummaryForAll();
@@ -16,10 +13,7 @@ cron.schedule('0 8 * * 1', async () => {
   }
 });
 
-/**
- * Monthly report — 1st of every month at 8:00 AM server time
- * Cron: "0 8 1 * *"
- */
+//  Monthly report — 1st of every month at 8:00 AM server time
 cron.schedule('0 8 1 * *', async () => {
   try {
     await runMonthlyReportForAll();

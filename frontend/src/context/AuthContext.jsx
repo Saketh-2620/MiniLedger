@@ -9,7 +9,6 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  // ── On mount: check if we already have a valid session ─────────────────────
   useEffect(() => {
     const token = window.__accessToken;
     if (token) {
@@ -22,7 +21,6 @@ export function AuthProvider({ children }) {
     }
   }, []);
 
-  // ── Listen for forced logout events (from axios interceptor) ────────────────
   useEffect(() => {
     const handleLogout = () => {
       setUser(null);
@@ -32,7 +30,6 @@ export function AuthProvider({ children }) {
     return () => window.removeEventListener('auth:logout', handleLogout);
   }, [navigate]);
 
-  // ── Called by AuthCallbackPage after Google OAuth redirect ──────────────────
   const loginWithToken = useCallback(async (accessToken) => {
     window.__accessToken = accessToken;
     try {
@@ -45,7 +42,6 @@ export function AuthProvider({ children }) {
     }
   }, [navigate]);
 
-  // ── Logout ──────────────────────────────────────────────────────────────────
   const logout = useCallback(async () => {
     try {
       await apiLogout();

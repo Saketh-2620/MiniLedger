@@ -1,11 +1,7 @@
 const pool         = require('../db/pool');
 const { sendMail } = require('./mailer');
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
 
-/**
- * Log a notification attempt in the DB and return the log row id.
- */
 async function createLog(userId, type, metadata = {}) {
   const { rows } = await pool.query(
     `INSERT INTO notification_logs (user_id, type, status, metadata)
@@ -32,19 +28,12 @@ async function markFailed(logId, errorMessage) {
   );
 }
 
-// ── Currency formatter ────────────────────────────────────────────────────────
+
 
 function fmt(amount) {
   return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 2 }).format(amount);
 }
 
-// ── 1. Large Transaction Alert ────────────────────────────────────────────────
-
-/**
- * Called immediately after a large transaction is created.
- * @param {Object} user        - { id, email, name }
- * @param {Object} transaction - { id, type, amount, description, date }
- */
 async function notifyLargeTransaction(user, transaction) {
   const logId = await createLog(user.id, 'large_transaction', {
     transactionId: transaction.id,
@@ -91,16 +80,11 @@ async function notifyLargeTransaction(user, transaction) {
     await markSent(logId);
   } catch (err) {
     await markFailed(logId, err.message);
-    throw err; // re-throw so caller can log it
+    throw err; 
   }
 }
 
-// ── 2. Weekly Summary ─────────────────────────────────────────────────────────
 
-/**
- * Send weekly summary to a single user.
- * Covers the past 7 days.
- */
 async function sendWeeklySummary(user) {
   const logId = await createLog(user.id, 'weekly_summary');
 
@@ -167,12 +151,7 @@ async function sendWeeklySummary(user) {
   }
 }
 
-// ── 3. Monthly Report ─────────────────────────────────────────────────────────
 
-/**
- * Send monthly report to a single user.
- * Covers the previous calendar month.
- */
 async function sendMonthlyReport(user) {
   const logId = await createLog(user.id, 'monthly_report');
 
@@ -273,11 +252,7 @@ async function sendMonthlyReport(user) {
   }
 }
 
-// ── Batch runners (called by scheduler) ──────────────────────────────────────
 
-/**
- * Send weekly summary to ALL users.
- */
 async function runWeeklySummaryForAll() {
   console.log('[Scheduler] Running weekly summary for all users...');
   const { rows: users } = await pool.query('SELECT id, email, name FROM users');
@@ -287,9 +262,7 @@ async function runWeeklySummaryForAll() {
   console.log(`[Scheduler] Weekly summary sent to ${users.length} users.`);
 }
 
-/**
- * Send monthly report to ALL users.
- */
+
 async function runMonthlyReportForAll() {
   console.log('[Scheduler] Running monthly report for all users...');
   const { rows: users } = await pool.query('SELECT id, email, name FROM users');

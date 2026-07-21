@@ -20,11 +20,9 @@ export default function TransactionsPage() {
   const [loading,      setLoading]      = useState(true);
   const [error,        setError]        = useState(null);
 
-  // Filters
   const [filterType,     setFilterType]     = useState('');
   const [filterCategory, setFilterCategory] = useState('');
 
-  // Dialogs
   const [formOpen,      setFormOpen]      = useState(false);
   const [editTarget,    setEditTarget]    = useState(null);
   const [deleteTarget,  setDeleteTarget]  = useState(null);
@@ -97,7 +95,6 @@ export default function TransactionsPage() {
         </Button>
       </Box>
 
-      {/* Filters */}
       <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
         <TextField
           select label="Type" size="small" value={filterType}
@@ -151,7 +148,7 @@ export default function TransactionsPage() {
             ) : (
               transactions.map((txn) => (
                 <TableRow key={txn.id} hover>
-                  <TableCell>{txn.date}</TableCell>
+                  <TableCell>{txn.date.slice(0, 10)}</TableCell>
                   <TableCell>
                     <Chip
                       label={txn.type}
@@ -205,7 +202,6 @@ export default function TransactionsPage() {
         />
       </TableContainer>
 
-      {/* Add / Edit dialog */}
       <TransactionFormDialog
         open={formOpen}
         onClose={() => setFormOpen(false)}
@@ -214,7 +210,6 @@ export default function TransactionsPage() {
         categories={categories}
       />
 
-      {/* Delete confirmation */}
       <ConfirmDialog
         open={confirmOpen}
         title="Delete Transaction"

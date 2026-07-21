@@ -6,8 +6,7 @@ const router = express.Router();
 
 router.use(authenticate);
 
-// ── GET /api/notifications ────────────────────────────────────────────────────
-// Returns notification log for the current user
+
 router.get('/', async (req, res, next) => {
   try {
     const { page = 1, limit = 20 } = req.query;

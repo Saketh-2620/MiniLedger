@@ -7,7 +7,6 @@ function errorHandler(err, req, res, next) {
     return res.status(409).json({ error: 'A record with that value already exists' });
   }
 
-  // PostgreSQL foreign key violation
   if (err.code === '23503') {
     return res.status(400).json({ error: 'Referenced record does not exist' });
   }
